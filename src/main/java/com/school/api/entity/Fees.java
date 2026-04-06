@@ -1,13 +1,10 @@
 package com.school.api.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 
 @Entity
 @Table(name = "fees")
-@Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class Fees {
 
     @Id
@@ -24,4 +21,16 @@ public class Fees {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    public Fees() {}
+
+    public Long getId() { return id; }
+    public BigDecimal getAmount() { return amount; }
+    public Student getStudent() { return student; }
+    public Course getCourse() { return course; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setAmount(BigDecimal amount) { this.amount = amount; }
+    public void setStudent(Student student) { this.student = student; }
+    public void setCourse(Course course) { this.course = course; }
 }

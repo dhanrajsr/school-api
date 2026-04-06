@@ -9,18 +9,22 @@ import com.school.api.repository.CourseRepository;
 import com.school.api.repository.FeesRepository;
 import com.school.api.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class FeesService {
 
     private final FeesRepository feesRepository;
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
+
+    public FeesService(FeesRepository feesRepository, StudentRepository studentRepository, CourseRepository courseRepository) {
+        this.feesRepository = feesRepository;
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
+    }
 
     public List<FeesResponse> findAll() {
         return feesRepository.findAll().stream().map(this::toResponse).toList();
@@ -39,11 +43,10 @@ public class FeesService {
                 .orElseThrow(() -> new EntityNotFoundException("Student not found: " + request.studentId()));
         Course course = courseRepository.findById(request.courseId())
                 .orElseThrow(() -> new EntityNotFoundException("Course not found: " + request.courseId()));
-        Fees fees = Fees.builder()
-                .amount(request.amount())
-                .student(student)
-                .course(course)
-                .build();
+        Fees fees = new Fees();
+        fees.setAmount(request.amount());
+        fees.setStudent(student);
+        fees.setCourse(course);
         return toResponse(feesRepository.save(fees));
     }
 

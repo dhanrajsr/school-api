@@ -5,16 +5,18 @@ import com.school.api.dto.BranchResponse;
 import com.school.api.entity.Branch;
 import com.school.api.repository.BranchRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BranchService {
 
     private final BranchRepository branchRepository;
+
+    public BranchService(BranchRepository branchRepository) {
+        this.branchRepository = branchRepository;
+    }
 
     public List<BranchResponse> findAll() {
         return branchRepository.findAll().stream().map(this::toResponse).toList();
@@ -25,11 +27,10 @@ public class BranchService {
     }
 
     public BranchResponse create(BranchRequest request) {
-        Branch branch = Branch.builder()
-                .name(request.name())
-                .location(request.location())
-                .contact(request.contact())
-                .build();
+        Branch branch = new Branch();
+        branch.setName(request.name());
+        branch.setLocation(request.location());
+        branch.setContact(request.contact());
         return toResponse(branchRepository.save(branch));
     }
 

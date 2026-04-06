@@ -7,18 +7,22 @@ import com.school.api.entity.Student;
 import com.school.api.repository.CourseRepository;
 import com.school.api.repository.StudentRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class StudentService {
 
     private final StudentRepository studentRepository;
     private final CourseRepository courseRepository;
     private final CourseService courseService;
+
+    public StudentService(StudentRepository studentRepository, CourseRepository courseRepository, CourseService courseService) {
+        this.studentRepository = studentRepository;
+        this.courseRepository = courseRepository;
+        this.courseService = courseService;
+    }
 
     public List<StudentResponse> findAll() {
         return studentRepository.findAll().stream().map(this::toResponse).toList();
@@ -29,14 +33,12 @@ public class StudentService {
     }
 
     public StudentResponse create(StudentRequest request) {
-        List<Course> courses = resolveCourses(request.courseIds());
-        Student student = Student.builder()
-                .name(request.name())
-                .age(request.age())
-                .dob(request.dob())
-                .address(request.address())
-                .courses(courses)
-                .build();
+        Student student = new Student();
+        student.setName(request.name());
+        student.setAge(request.age());
+        student.setDob(request.dob());
+        student.setAddress(request.address());
+        student.setCourses(resolveCourses(request.courseIds()));
         return toResponse(studentRepository.save(student));
     }
 

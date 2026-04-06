@@ -7,17 +7,20 @@ import com.school.api.entity.Course;
 import com.school.api.repository.BranchRepository;
 import com.school.api.repository.CourseRepository;
 import jakarta.persistence.EntityNotFoundException;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class CourseService {
 
     private final CourseRepository courseRepository;
     private final BranchRepository branchRepository;
+
+    public CourseService(CourseRepository courseRepository, BranchRepository branchRepository) {
+        this.courseRepository = courseRepository;
+        this.branchRepository = branchRepository;
+    }
 
     public List<CourseResponse> findAll() {
         return courseRepository.findAll().stream().map(this::toResponse).toList();
@@ -30,12 +33,11 @@ public class CourseService {
     public CourseResponse create(CourseRequest request) {
         Branch branch = branchRepository.findById(request.branchId())
                 .orElseThrow(() -> new EntityNotFoundException("Branch not found: " + request.branchId()));
-        Course course = Course.builder()
-                .name(request.name())
-                .duration(request.duration())
-                .subjects(request.subjects())
-                .branch(branch)
-                .build();
+        Course course = new Course();
+        course.setName(request.name());
+        course.setDuration(request.duration());
+        course.setSubjects(request.subjects());
+        course.setBranch(branch);
         return toResponse(courseRepository.save(course));
     }
 

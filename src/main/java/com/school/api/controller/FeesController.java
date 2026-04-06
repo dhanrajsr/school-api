@@ -4,7 +4,6 @@ import com.school.api.dto.FeesRequest;
 import com.school.api.dto.FeesResponse;
 import com.school.api.service.FeesService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/fees")
-@RequiredArgsConstructor
 public class FeesController {
 
     private final FeesService feesService;
+
+    public FeesController(FeesService feesService) {
+        this.feesService = feesService;
+    }
 
     @GetMapping
     public List<FeesResponse> findAll() {

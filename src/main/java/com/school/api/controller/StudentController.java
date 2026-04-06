@@ -4,7 +4,6 @@ import com.school.api.dto.StudentRequest;
 import com.school.api.dto.StudentResponse;
 import com.school.api.service.StudentService;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,10 +11,13 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/students")
-@RequiredArgsConstructor
 public class StudentController {
 
     private final StudentService studentService;
+
+    public StudentController(StudentService studentService) {
+        this.studentService = studentService;
+    }
 
     @GetMapping
     public List<StudentResponse> findAll() {
