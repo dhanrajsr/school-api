@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: school-postgres
+    environment:
+      POSTGRES_DB: schooldb
+      POSTGRES_USER: school
+      POSTGRES_PASSWORD: school123
+    ports:
+      - "5432:5432"
+    volumes:
+      - school_pgdata:/var/lib/postgresql/data
+
+volumes:
+  school_pgdata:
